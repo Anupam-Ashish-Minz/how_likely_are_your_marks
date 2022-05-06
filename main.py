@@ -13,21 +13,29 @@ def fac(x):
     return y
 
 
-def comb(n, r):
+def choose(n, r):
     return fac(n) / (fac(r) * fac(n-r))
 
-def act_marks(X, n, plus_marks, neg_marks):
-    return plus_marks * X - neg_marks * (n - X)
+
+def act_marks(X, n, pos_marks, neg_marks):
+    return pos_marks * X - neg_marks * (n - X)
+
+
+def binomial_distrib(x, n, p, q):
+    return choose(n, x) * p**x * q**(n-x)
+
 
 if __name__ == "__main__":
+    # number of questions
     n = 10
+    # number of options
     Q = 4
+    # positive marks
+    pos_marks = 3
+    # negative marks
+    neg_marks = 1
 
-    # data = [(i, comb(10, i)/(2**10)) for i in range(0, 11)]
-
-    # 3 marks positive for each right answer and 1 marks negative for each
-    # wrong answer
-    data = [(act_marks(X, n, 1, 0), comb(n, X) * (((1/Q)**X * ((Q-1)/Q)**(n-X))))
+    data = [(act_marks(X, n, pos_marks, neg_marks), binomial_distrib(X, n, 1/Q, 1-(1/Q)))
             for X in range(0, n+1)]
 
     x = []
@@ -41,9 +49,8 @@ if __name__ == "__main__":
         x.append(j)
         y.append(k)
 
-    print("total prob =", total_prob)
+    # print("total prob =", total_prob)
+    print("error", total_prob - 1.0)
 
     plt.plot(x, y)
-    # plt.xticks(x)
-    # plt.yticks(y)
     plt.show()
